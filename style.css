@@ -45,36 +45,27 @@ footer, #foot {
   height: 20px;
 }
 
-.well.item {
-  min-height: 90px;
-}
-
 .img-rounded {
   border: 1px solid #DDDDDD;
 }
 
+/* WORK */
+#work li h4 {
+  display: inline-block;
+}
+
 @media screen and (max-width: 720px) {
-  .over720 {
-    display: none;
-  }
+  .over720 { display: none; }
 }
 @media screen and (max-width: 680px) {
-  .over680 {
-    display: none;
-  }
+  .over680 { display: none; }
 }
 @media screen and (max-width: 500px) {
-  .over500 {
-    display: none;
-  }
+  .over500 { display: none; }
 }
 @media screen and (max-width: 310px) {
-  .over310 {
-    display: none;
-  }
+  .over310 { display: none; }
 }
 @media screen and (max-width: 300px) {
-  .over300 {
-    display: none;
-  }
+  .over300 { display: none; }
 }
