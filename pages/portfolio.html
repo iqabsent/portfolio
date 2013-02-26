@@ -1,232 +1,316 @@
-<div>
-  Tag game (2001)
-  Turbo Pascal
-  Secondary Education, Computer Studies Project
-  <img "images/triangle-tag.jpg" />
-  <details>
-  With limited knowledge, and limited graphical capabilities, a game was
-  written..
-  There was no internet access (I would only become acquainted with the WWW a
-  year or so later); things were figured out. Knowledge of peers and teachers
-  was drawn upon. Non-blocking key input (i.e., not readchar) was a key
-  discovery (no pun intended). I also managed to figure out the logic of a game
-  loop, years before I would learn the term.
-  This was my first exploration of 2D coordinate space and collision detection.
-  It was also my first attempt at AI. I learnt very quickly that a "perfect" AI
-  was boring and frustrating.. that you had to build in flaws or randomness to
-  make the game beatable.
-  I also learnt a bit about game dynamic here. The player who was "it" needed
-  some advantage. Leaving the screen at one edge, saw the player enter from the
-  edge opposite, pacman-style. This would allow for an infinite chase across
-  screen-space, so the "it" player was made slightly faster.
-  Land-mines were also added .. the running player could place a pixel of its
-  own colour at the press of a button. If the chasing player hit it, he would
-  be spawned again at center-screen. Mines were limited to 3.
-  </details>
-</div>
+<div id="portfolio" class="row">
+<article  class="span12">
+  <h4>Tag game</h4> <time>2001</time>
+  <h5>Secondary Education, Computer Studies Project</h5>
+  <div class="tech"><span class="TP">Turbo Pascal</span></div>
+  <div class="row">
+    <details class="span6">
+    With limited knowledge, and limited graphical capabilities, a game was
+    written..
+    There was no internet access (I would only become acquainted with the WWW a
+    year or so later); things were figured out. Knowledge of peers and teachers
+    was drawn upon. Non-blocking key input (i.e., not readchar) was a key
+    discovery (no pun intended). I also managed to figure out the logic of a game
+    loop, years before I would learn the term.
+    This was my first exploration of 2D coordinate space and collision detection.
+    It was also my first attempt at AI. I learnt very quickly that a "perfect" AI
+    was boring and frustrating.. that you had to build in flaws or randomness to
+    make the game beatable.
+    I also learnt a bit about game dynamic here. The player who was "it" needed
+    some advantage. Leaving the screen at one edge, saw the player enter from the
+    edge opposite, pacman-style. This would allow for an infinite chase across
+    screen-space, so the "it" player was made slightly faster.
+    Land-mines were also added .. the running player could place a pixel of its
+    own colour at the press of a button. If the chasing player hit it, he would
+    be spawned again at center-screen. Mines were limited to 3.
+    </details>
+    <div class="images pull-right span6">
+      <img src="images/Turbo-Pascal-7.png" alt="Turbo Pascal 7"/>
+      <img src="images/Triangle-Tag.png" alt="Triangle Tag"/>
+    </div>
+  </div>
+</article>
 
-<div>
-3D Game (2003)
-DirectX 7 SDK, C++
-Systems Development, Final Project
-<details>
-At the very end of a 2-year course, dealing purely with syntax and usage of
-several programming languages along with various database connectors, we were
-given the opportunity to write a database system .. or a 3D game. This second
-option would be wholly self-taught. We had, if memory serves, 5 weeks.
-The hardest part was the first two weeks' total lack of progress. It was an
-individual project; myself and one other candidate were the only ones to take
-up the challange. We combined research efforts until we found the DirectX SDK
-and the accompanying sample code as a starting point. He went FPS, I went
-flight-sim.
-The end result was a 3D cube sky-box with a nice wrapping skyline and a
-textured floor (which tiles nicely, thanks 3D Studio Max) containing a .x model
-of an aircraft somewhere inside it. The craft position was fixed in x- and z-
-axes, but was free to move up and down on y. The illusion of movement is
-created by constantly adjusting the texture offset on the floor. Height is
-restricted by means of an engine-stall, and a crash at the bottom.
-This was my first encounter with 3D graphics. It also incorporates sound and
-UI elements. All sprites were created by myself using MS Paint.
-I remember scratching my head about why 3.14 ("wait, that's pi!") rotated
-the reversed model to face the right direction, and not 180; first encounter
-with radians.
-</details>
-</div>
+<article class="span12">
+  <h4>3D Game</h4> <time>2003</time>
+  <h5>Systems Development, Final Project</h5>
+  <div class="tech"><span class="DX">DirectX 7 SDK</span>&nbsp;<span class="C">C++</span></div>
+  <div class="row">
+    <details class="span12">
+    At the very end of a 2-year course, dealing purely with syntax and usage of
+    several programming languages along with various database connectors, we were
+    given the opportunity to write a database system .. or a 3D game. This second
+    option would be wholly self-taught. We had, if memory serves, 5 weeks.
+    The hardest part was the first two weeks' total lack of progress. It was an
+    individual project; myself and one other candidate were the only ones to take
+    up the challange. We combined research efforts until we found the DirectX SDK
+    and the accompanying sample code as a starting point. He went FPS, I went
+    flight-sim.
+    The end result was a 3D cube sky-box with a nice wrapping skyline and a
+    textured floor (which tiles nicely, thanks 3D Studio Max) containing a .x model
+    of an aircraft somewhere inside it. The craft position was fixed in x- and z-
+    axes, but was free to move up and down on y. The illusion of movement is
+    created by constantly adjusting the texture offset on the floor. Height is
+    restricted by means of an engine-stall, and a crash at the bottom.
+    This was my first encounter with 3D graphics. It also incorporates sound and
+    UI elements. All sprites were created by myself using MS Paint.
+    I remember scratching my head about why 3.14 ("wait, that's pi!") rotated
+    the reversed model to face the right direction, and not 180; first encounter
+    with radians.
+    </details>
+  </div>
+</article>
 
-<div>
-Site Capacity (2007)
-MicroStation MX, VBA
-Slider Studio Ltd, R&D project and service tool
-<details>
-During my first year of BSc study, I was given the opportunity to work on a
-small project for a company (then) based on campus at UEL. The inital project
-was simply a project management application, to manage files and links between
-them to ease the use of MicroStation, a CAD package in use by the architects in
-the studio. This then flowed over into development of Site Capacity, and an
-indefinite contract with them (which lasted 5 good years).
-Site Capacity is a tool used by the practice to aid in quick generation of
-urban layouts. I was fortunate enough to work on this with <a href="http://www.linkedin.com/profile/view?id=50908910">Renee Puusepp</a>.
-It involved programatic distribution of pre-created geometrical objects along
-user-defined paths. It also touched on Business Information Modeling (BIM),
-essentially jsut embedding meta-data into the geometry for better programatic
-management and evaluation of constructions.
-This project introduced me to agile develompent methods, extreme- and
-pair-programming. It was the first time I got to use an API to a 3D environemnt
-, and also the first time being paid to do coding.. happy.
-You can read more of Site Capacity at <a href="http://www.sitecapacity.com/">http://www.sitecapacity.com/</a>
-Much thanks to <a href="http://www.linkedin.com/profile/view?id=335054">Frank Leonhardt</a> both a consultant to Slider, and lecturer at
-UEL, for the introduction to Slider, and the kick-off to my career.
-</details>
-</div>
-<div>
-Slider Projects (2007 - 2012)
-YouCanPlan 3D, StickyWorld, PHPFrame, DoC API, TCAS, Joomla!, WordPress
-Java, PHP, MySQL, JavaScript
-<details>
-During my time with Slider Studio, I've worked on many projects of varying
-nature. I'll go over a few of them here.
+<article class="span12">
+  <h4>Site Capacity</h4> <time>2007</time>
+  <h5>Slider Studio Ltd, R&D project and service tool</h5>
+  <div class="tech"><span class="CAD">MicroStation MX</span>&nbsp;<span class="VBA">VBA</span><a class="reference" href="http://www.sitecapacity.com/">http://www.sitecapacity.com/</a></div>
+  <div class="row">
+    <details class="span12">
+    During my first year of BSc study, I was given the opportunity to work on a
+    small project for a company (then) based on campus at UEL. The inital project
+    was simply a project management application, to manage files and links between
+    them to ease the use of MicroStation, a CAD package in use by the architects in
+    the studio. This then flowed over into development of Site Capacity, and an
+    indefinite contract with them (which lasted 5 good years).
+    Site Capacity is a tool used by the practice to aid in quick generation of
+    urban layouts. I was fortunate enough to work on this with <a href="http://www.linkedin.com/profile/view?id=50908910">Renee Puusepp</a>.
+    It involved programatic distribution of pre-created geometrical objects along
+    user-defined paths. It also touched on Business Information Modeling (BIM),
+    essentially just embedding meta-data into the geometry for better programatic
+    management and evaluation of constructions.
+    This project introduced me to agile develompent methods, extreme- and
+    pair-programming. It was the first time I got to use an API to a 3D environemnt
+    , and also the first time being paid to do coding.. happy.
+    You can read more of Site Capacity at <a href="http://www.sitecapacity.com/">http://www.sitecapacity.com/</a>
+    Much thanks to <a href="http://www.linkedin.com/profile/view?id=335054">Frank Leonhardt</a> both a consultant to Slider, and lecturer at
+    UEL, for the introduction to Slider, and the kick-off to my career.
+    </details>
+  </div>
+</article>
 
-Web development
-The majority of projects were development of website templates using either the
-Joomla! or WordPress frameworks; some highly customisable, for clients and some
-more basic for internal use.
+<article class="span12">
+  <h4>Agents in CAD</h4> <time>2010</time>
+  <h5>BSc Software Engineering - Final Project</h5>
+  <div class="tech"><span class="CAD">SketchUp 8</span>&nbsp;<span class="RB">Ruby Script</span></div>
+  <div class="row">
+    <details class="span12">
+    This delves into the use of agents within Google’s SketchUp, an entry level CAD
+    package. It explores the extension of SketchUp functionality via the Ruby API.
+    It seeks to allow users to turn components into intelligent objects, capable of
+    reflecting user-defined personalities by means of distribution. It is a step
+    towards having tables and chairs sort themselves into appropriate layouts,
+    taking the mundane task of spatial distribution away from the architect. No
+    agents were harmed during the development of this software.
+    
+    I hope to make the power of Agent available to the casual CAD user. The ideal
+    outcome is to create a tool for Google SketchUp which allows the user to turn
+    3D components into intelligent objects with relative ease. These objects
+    should be capable of aligning, distancing and orientating themselves in
+    relation to their peers according to behaviour sets specified by the user.
+    The desired result is that these components can achieve a “good” distribution
+    on their own.
+    </details>
+  </div>
+</article>
 
-PHPFrame
-I aided ENOISE, a regular Slider Studio collaborator, with the development of
-PHPFrame, a lightweight (but very capable) PHP framework. This framework
-enabled us to develop future web-applications much more rapidly. The website is
-no longer maintained, but the codebase is still in use and can be seen <a href="https://github.com/PHPFrame">here</a>.
-This project introduced me to MVC architecture, unit-tests, automated build
-systems, repository management systems and the PERL coding standard.
+<section class="span12">
+  <h3>Slider Projects</h3> <time>2007 - 2012</time>
+  <div class="tech">&nbsp;</div>
+  <div class="row">
+    <details class="span12">
+    During my time with Slider Studio, I've worked on many projects of varying
+    nature. I'll go over a few of them here.
+   
+    <article>
+      <h4>YouCanPlan3D</h4>
+      <div class="tech"><span class="Java">Java</span><a class="reference" href="http://www.youcanplan.co.uk/">http://www.youcanplan.co.uk/</a></div>
+      <details>
+      3D Java application with Client-server architecture. Used in urban development
+      projects for community engagement and voting on development options in their
+      neighbourhood. I was responsible for adding a single feature (gravity) which
+      was later removed as it "detracts from the purpose of the software". See more
+      on the website linked above.
+      </details>
+    </article>
+    <article>
+      <h4>Web development</h4>
+      <div class="tech"><span class="WP">WordPress Framework</span>&nbsp;<span class="JMLA">Joomla!</span>&nbsp;<span class="JS">JavaScript</span>&nbsp;<span class="HTML">HTML5</span></div>
+      The majority of projects were development of website templates using either the
+      Joomla! or WordPress frameworks; some highly customisable, for clients and some
+      more basic for internal use.
+    </article>
+    <article>
+      <h4>PHPFrame</h4>
+      <div class="tech"><span class="PHP">PHP</span>&nbsp;<span class="MySQL">MySQL</span>&nbsp;<span class="JSON">JSON</span>&nbsp;<span class="MVC">MVC Architecture</span></div>
+      I aided ENOISE, a regular Slider Studio collaborator, with the development of
+      PHPFrame, a lightweight (but very capable) PHP framework. This framework
+      enabled us to develop future web-applications much more rapidly. The website is
+      no longer maintained, but the codebase is still in use and can be seen <a href="https://github.com/PHPFrame">here</a>.
+      This project introduced me to MVC architecture, unit-tests, automated build
+      systems, repository management systems and the PERL coding standard.
+    </article>
+    <article>
+      <h4>Drivers of Change (DoC) API</h4>
+      <div class="tech"><span class="PHP">PHPFrame</span>&nbsp;<span class="JSON">JSON</span>&nbsp;<span class="REST">REST</span>&nbsp;<span class="API">API programming</span></div>
+      http://api.driversofchange.com/api/
+      http://www.driversofchange.com/make/research/doc/
+      The Drivers of Change project is driven by the foresight team of Arup, a large,
+      multi-national company. They saw the need to manage an ever-growing database
+      containing data gathered through events on the use an popularity (in voting) of
+      what they refer to as Drivers of Change cards.
+      We implemented a RESTful API to a slightly re-designed version of the existing
+      database. It allowed for authentication to modify, and open read access to
+      various resource endpoints. Data could be shifted in XML or JSON formats via
+      HTTP requests. We used PHPFrame (Mashine plug-in) to develop this solution.
+      Here I learnt about RESTful architecture and Public/Private key authentication
+      algorithms (it gets complicated). This was also the first time I developed an
+      entire software solution on my own. I learnt the value of knowing a project
+      back-to-front, and the efficiency this brings to coding efforts. For this
+      reason, this is probably the project I've enjoyed working on the most to date.
+      While assisting in the use of the DoC API during the parrallel development of
+      its first client application, I discovered the ease of development when the
+      database layer has been separated out from the actual application entirely.
+    </article>
+    <article>
+      <h4>Treethorpe Case Administration System (TCAS)</h4>
+      <div class="tech"><span class="PHP">PHPFrame</span></div>
+      http://www.treethorpe.com/
+      TCAS is a case administration system I designed and developed as sole developer
+      for Treethrope LTD. It's used by them to keep track of case details and ongoing
+      case research. This web-based application is was built using PHPFrame over the
+      course of 3 months. Here I was already able to estimate development time of
+      features with fair accuracy, as I had experience in using PHPFrame with
+      development of the DoC API. It was the first time I stepped through a full
+      development cycle on this scale. Permissions, access levels and authorisation
+      to access specific resources with rights to execute specific operations on
+      these was a fun problem to have solved.Knowledge was gained in project
+      management and client relations. I also did a lot of JavaScript optimisation
+      and realised the difference in performance between jQuery and native JS code.
+      </details>
+    </article>
+  </div>
+</section>
 
-Drivers of Change (DoC) API
-http://api.driversofchange.com/api/
-http://www.driversofchange.com/make/research/doc/
-The Drivers of Change project is driven by the foresight team of Arup, a large,
-multi-national company. They saw the need to manage an ever-growing database
-containing data gathered through events on the use an popularity (in voting) of
-what they refer to as Drivers of Change cards.
-We implemented a RESTful API to a slightly re-designed version of the existing
-database. It allowed for authentication to modify, and open read access to
-various resource endpoints. Data could be shifted in XML or JSON formats via
-HTTP requests. We used PHPFrame (Mashine plug-in) to develop this solution.
-Here I learnt about RESTful architecture and Public/Private key authentication
-algorithms (it gets complicated). This was also the first time I developed an
-entire software solution on my own. I learnt the value of knowing a project
-back-to-front, and the efficiency this brings to coding efforts. For this
-reason, this is probably the project I've enjoyed working on the most to date.
-While assisting in the use of the DoC API during the parrallel development of
-its first client application, I discovered the ease of development when the
-database layer has been separated out from the actual application entirely.
+<article class="span12">
+  <h3>ENOISE Projects</h3> <time>2012 - Present</time>
+  <div class="tech"><span class="JS">Java Script</span>&nbsp;<span class="JS">NodeJS</span>&nbsp;<span class="JS">Nginx</span></div>
+  <div class="row">
+    <details class="span12">
+    During my time with ENOISE, I've been introduced to several new technologies
+    and workflows. We use agile methods, SCRUM, pair-programming and test-driven
+    development, as and when appropriate. We use JavaScript (both server-side and
+    client-side). I've only worked on in-house projects, and these are not yet in
+    the public domain.
+    </details>
+  </div>
+</article>
 
-Treethorpe Case Administration System (TCAS)
-http://www.treethorpe.com/
-TCAS is a case administration system I designed and developed as sole developer
-for Treethrope LTD. It's used by them to keep track of case details and ongoing
-case research. This web-based application is was built using PHPFrame over the
-course of 3 months. Here I was already able to estimate development time of
-features with fair accuracy, as I had experience in using PHPFrame with
-development of the DoC API. It was the first time I stepped through a full
-development cycle on this scale. Permissions, access levels and authorisation
-to access specific resources with rights to execute specific operations on
-these was a fun problem to have solved.Knowledge was gained in project
-management and client relations. 
-</details>
-</div>
+<article class="span12">
+  <h4>Impostoriser</h4> <time>2012</time>
+  <h5>Tools and Middleware (assignment)</h5>
+  <div class="tech"><span class="C">C++</span>&nbsp;<span class="GL">OpenGL</span></div>
+  <div class="row">
+    <details class="span12">
+    We were given the assignment to produce either a demo showing integration with
+    a middleware of our choosing (Box2D and Bullet being the most prominent options
+    as these were covered during the course) or write a useful tool. I dug in for
+    the latter.
+    During lectures there was mention of "impostors" or "sprites" as I know them.
+    These are still used today in games as a means of saving resources when drawing
+    distan objects (instead of 3D models) where you can get away with low detail.
+    I remembered rotating a QuakeII quad-damage model at 30 degree angle steps and
+    making screen-shots to assemble them into an animated windows cursor, for
+    personal use back in school, and thought a tool do do this kind of thing for
+    you would be useful, thus: Impostorisor was born.
+    The Tool takes as input a 3D model in .geom format (<a href="http://andythomason.com/">Andy Thomason</a>'s work) and
+    spits out a single image with a grid of frames at stepped angle rotations of
+    the input model against a black background.
+    This project saw me step into the world of OpenGL (similar to DirectX, so not
+    totally new) and re-aquainted with my good friend C++. It looked diferent after
+    years of PHP and JavaScript.
+    </details>
+  </div>
+</article>
 
-<div>
-Impostoriser (2012)
-Tools and Middleware (assignment)
-C++, OpenGL
-<details>
-We were given the assignment to produce either a demo showing integration with
-a middleware of our choosing (Box2D and Bullet being the most prominent options
-as these were covered during the course) or write a useful tool. I dug in for
-the latter.
-During lectures there was mention of "impostors" or "sprites" as I know them.
-These are still used today in games as a means of saving resources when drawing
-distan objects (instead of 3D models) where you can get away with low detail.
-I remembered rotating a QuakeII quad-damage model at 30 degree angle steps and
-making screen-shots to assemble them into an animated windows cursor, for
-personal use back in school, and thought a tool do do this kind of thing for
-you would be useful, thus: Impostorisor was born.
-The Tool takes as input a 3D model in .geom format (<a href="http://andythomason.com/">Andy Thomason</a>'s work) and
-spits out a single image with a grid of frames at stepped angle rotations of
-the input model against a black background.
-This project saw me step into the world of OpenGL (similar to DirectX, so not
-totally new) and re-aquainted with my good friend C++. It looked diferent after
-years of PHP and JavaScript.
-</details>
-</div>
+<article class="span12">
+  <h4>AltitudeZero - A 2D Game</h4> <time>2012</time>
+  <h5>Introduction to Game Programming (assignment)</h5>
+  <div class="tech"><span class="C">C++</span>&nbsp;<span class="GL">OpenGL</span>&nbsp;<span class="AL">OpenAL</span><a class="reference" href="https://github.com/iqabsent/MScCGE-gp-2012">https://github.com/iqabsent/MScCGE-gp-2012</a></div>
+  <div class="row">
+    <details class="span12">
+    "Write a 2D game using OpenGL and C++"; this was fun. Having had my head re-
+    wrapped around OpenGL and C++, I set out to make a classic, top-down, space
+    shooter scroller game.
+    There isn't much to say about it, but I'm quite happy with what I was able to
+    accomplish in a very short space of time (~1 week while working part-time and
+    attending Uni). The code can be seen on my github account as linked to above.
+    The name, "AltitudeZero", is a play on fact that the game is written using 3D
+    techniques, but simply sets the depth (height from the game perspective) for
+    all game-objects to 0.
+    </details>
+  </div>
+</article>
 
-<div>
-AltitudeZero - A 2D Game (2012)
-Introduction to Game Programming (assignment)
-<a href="https://github.com/iqabsent/MScCGE-gp-2012">https://github.com/iqabsent/MScCGE-gp-2012</a>
-C++, OpenGL
-<details>
-"Write a 2D game using OpenGL and C++"; this was fun. Having had my head re-
-wrapped around OpenGL and C++, I set out to make a classic, top-down, space
-shooter scroller game.
-There isn't much to say about it, but I'm quite happy with what I was able to
-accomplish in a very short space of time (~1 week while working part-time and
-attending Uni). The code can be seen on my github account as linked to above.
-The name, "AltitudeZero", is a play on fact that the game is written using 3D
-techniques, but simply sets the depth (height from the game perspective) for
-all game-objects to 0.
-</details>
-</div>
+<article class="span12">
+  <h4>L-System</h4> <time>2012</time>
+  <h5>Maths and Graphics (assignment)</h5>
+  <div class="tech"><span class="C">C++</span>&nbsp;<span class="DX">DirectX 9</span>&nbsp;<span class="BS">RTVS</span><a class="reference" href="https://github.com/iqabsent/MScCGE-mg-2012">https://github.com/iqabsent/MScCGE-mg-2012</a></div>
+  <div class="row">
+    <details class="span12">
+    An L-System. (If you don't already know what that is, you probably don't need
+    to) .. that said, this program draws lines based on text in config files,
+    by using a string to start, and doing recursive string replacement according to
+    rules specified, and then interpreting each character in the resulting string
+    as a "command": move and draw, rotate, start branch and end branch .. more or
+    less.
+    It works and the code for it can also be seen on my github account.
+    We were asked to use C++, DirectX 9 and a library called RTVS which I re-wrote
+    into a unity build.
+    </details>
+  </div>
+</article>
 
-<div>
-L-System (2012)
-<a href="https://github.com/iqabsent/MScCGE-mg-2012">https://github.com/iqabsent/MScCGE-mg-2012</a>
-Maths and Graphics (assignment)
-C++, DirectX 9, RTVS
-<details>
-An L-System. (If you don't already know what that is, you probably don't need
-to) .. that said, this program draws lines based on text in config files,
-by using a string to start, and doing recursive string replacement according to
-rules specified, and then interpreting each character in the resulting string
-as a "command": move and draw, rotate, start branch and end branch .. more or
-less.
-It works and the code for it can also be seen on my github account.
-We were asked to use C++, DirectX 9 and a library called RTVS which I re-wrote
-into a unity build.
-</details>
-</div>
+<article class="span12">
+  <h4>Terrain Generation</h4> <time>2013</time>
+  <h5>Maths and Graphics (Assignment, Group)</h5>
+  <div class="tech"><span class="C">C++</span>&nbsp;<span class="GL">OpenGL</span></div>
+  <div class="row">
+    <details class="span12">
+    A quick demonstration of terrain generation using an implimentation of Perlin
+    noise. This done in collaboration with <a href="http://uk.linkedin.com/in/wmasek">Will Masek</a>.
+    We were team Will (him #1, I was #0; I then I started using my real name which
+    solved a lot of problems).
+    Will focussed on a DirectX framework for use in this and future projects, as
+    well as the generation of a vertex mesh. He then exposed a function by which
+    this mesh could be generated using an array of input values for heights, and
+    rendered as a triangle-strip with texture(s) wrapped over the top.
+    I, Willem, set out to develop an implimentation of the Perlin Noise algorithm
+    to feed height values to this function in order to generate viable terrain.
+    </details>
+  </div>
+</article>
 
-<div>
-Terrain Generation (2013)
-Maths and Graphics (Assignment, Group)
-C++, OpenGL
-<details>
-A quick demonstration of terrain generation using an implimentation of Perlin
-noise. This done in collaboration with <a href="http://uk.linkedin.com/in/wmasek">Will Masek</a>.
-We were team Will (him #1, I was #0; I then I started using my real name which
-solved a lot of problems).
-Will focussed on a DirectX framework for use in this and future projects, as
-well as the generation of a vertex mesh. He then exposed a function by which
-this mesh could be generated using an array of input values for heights, and
-rendered as a triangle-strip with texture(s) wrapped over the top.
-I, Willem, set out to develop an implimentation of the Perlin Noise algorithm
-to feed height values to this function in order to generate viable terrain.
-</details>
-</div>
+<article class="span12">
+  <h4>Game Demo</h4> <time>2013</time>
+  <h5>Introduction to Game Programming (Assignment, Group)</h5>
+  <div class="tech"><span class="UNITY">Unity 3D</span>&nbsp;<span class="CS">C#</span>&nbsp;<span class="JS">JavaScript</span></div>
+  <div class="row">
+    <details class="span12">
 
-<div>
-Game Demo (2013)
-Introduction to Game Programming (Assignment, Group)
-Unity 3D
-<details>
+    </details>
+  </div>
+</article>
 
-</details>
-</div>
+<article class="span12">
+  <h4>Dynamic Fluid Simulation</h4> <time>2013</time>
+  <h5>Mobile development (iOS)</h5>
+  <div class="tech"><span class="C">C++</span>&nbsp;<span class="GL ES2">OpenGL ES 2.0</span>&nbsp;<span class="GLSL">GLSL</span>&nbsp;<span class="IOS"><strike>UIKit</strike></span></div>
+  <div class="row">
+    <details class="span12">
+    <a href="http://www.linkedin.com/profile/view?id=14781823">Per Griffiths</a>
+    </details>
+  </div>
+</article>
 
-<div>
-Dynamic Fluid Simulation (2013)
-Mobile development (iOS)
-C++, OpenGL ES 2.0, GLSL, <strike>UIKit</strike>
-<details>
-http://www.linkedin.com/profile/view?id=14781823
-</details>
-</div>
+</div> <!-- #portfolio -->

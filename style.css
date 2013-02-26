@@ -1,50 +1,51 @@
 html {
   overflow-y: scroll;
 }
-
 a:focus{
   outline: none;
 }
-
 header {
   height: 80px;
   margin-top: 20px;
 }
-
 header h1 {
   margin-top: 24px;
 }
-
 .avatar {
   float: right;
   width: 90px;
   background-color: #ffffff;
   margin: 0 30px -30px 0;
 }
-
 .navbar {
   height: 42px;
 }
-
 .navbar-inner {
   padding-left: 0px;
 }
-
 .affix {
     position: fixed; 
     top: 20px;
 }
-
 footer {
   position: fixed;
   width: 100%;
   bottom: 0px;
+  line-height: 60px;
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(50%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 50%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffffff',GradientType=0 ); /* IE6-9 */
 }
-
 footer, #foot {
-  height: 20px;
+  height: 60px;
 }
-
+footer .update {
+  float: right;
+}
 .img-rounded {
   border: 1px solid #DDDDDD;
 }
@@ -52,6 +53,75 @@ footer, #foot {
 /* WORK */
 #work li h4 {
   display: inline-block;
+}
+
+/* PORTFOLIO */
+#portfolio article {
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+#portfolio article h4 {
+  display: inline-block;
+  float: left;
+}
+#portfolio section article h4 {
+  display: inline-block;
+  float: none;
+}
+#portfolio article h5 {
+  clear: both;
+  display: inline-block;
+  margin-left: 25px;
+  padding-left: 25px;
+  border-left: 1px solid #DDDDDD;
+}
+#portfolio article time, #portfolio section time {
+  float: right;
+}
+#portfolio article .tech {
+  margin-bottom: 10px;
+}
+#portfolio details {
+  clear: both;
+  overflow: hidden;
+}
+#portfolio article .read-more {
+
+}
+#portfolio a.reference {
+  margin-left: 20px;
+}
+#portfolio .tech span {
+  border-radius: 3px 3px 3px 3px;
+  background-color: #999999;
+  color: #FFFFFF;
+  display: inline-block;
+  font-size: 11.844px;
+  font-weight: bold;
+  line-height: 14px;
+  padding: 2px 4px;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  vertical-align: baseline;
+  white-space: nowrap;
+  line-height: 20px;
+  text-align: left;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+#portfolio .tech span.C { background-color: #F30021; }
+#portfolio .tech span.GL { background-color: #FF7700; }
+#portfolio .tech span.HTML { background-color: #04819E; }
+#portfolio .tech span.JS { background-color: #34D800; }
+#portfolio .tech span.DX { background-color: #A600A6; }
+#portfolio .tech span.PHP { background-color: #4012AF; }
+#portfolio .tech span.JSON { background-color: #FFD300; }
+#portfolio .tech span.GLSL { background-color: #FFD900; }
+#portfolio .tech span.CAD { background-color: #CCF621; }
+#portfolio .tech span.CS { background-color: #048198; }
+#portfolio .tech span.MySQL { background-color: #0F4DA8; }
+#portfolio .images img {
+  margin-left: 32px;
+  margin-bottom: 5px;
 }
 
 @media screen and (max-width: 720px) {
