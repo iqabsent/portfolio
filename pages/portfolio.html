@@ -6,20 +6,21 @@
   <div class="row">
     <details class="span6">
     With limited knowledge, and limited graphical capabilities, a game was
-    written..
+    written..<br />
     There was no internet access (I would only become acquainted with the WWW a
     year or so later); things were figured out. Knowledge of peers and teachers
     was drawn upon. Non-blocking key input (i.e., not readchar) was a key
     discovery (no pun intended). I also managed to figure out the logic of a game
-    loop, years before I would learn the term.
+    loop, years before I would learn the term.<br />
+    <br />
     This was my first exploration of 2D coordinate space and collision detection.
     It was also my first attempt at AI. I learnt very quickly that a "perfect" AI
     was boring and frustrating.. that you had to build in flaws or randomness to
-    make the game beatable.
+    make the game beatable.<br />
     I also learnt a bit about game dynamic here. The player who was "it" needed
     some advantage. Leaving the screen at one edge, saw the player enter from the
     edge opposite, pacman-style. This would allow for an infinite chase across
-    screen-space, so the "it" player was made slightly faster.
+    screen-space, so the "it" player was made slightly faster.<br />
     Land-mines were also added .. the running player could place a pixel of its
     own colour at the press of a button. If the chasing player hit it, he would
     be spawned again at center-screen. Mines were limited to 3.
@@ -40,20 +41,22 @@
     At the very end of a 2-year course, dealing purely with syntax and usage of
     several programming languages along with various database connectors, we were
     given the opportunity to write a database system .. or a 3D game. This second
-    option would be wholly self-taught. We had, if memory serves, 5 weeks.
+    option would be wholly self-taught. We had, if memory serves, 5 weeks.<br />
+    <br />
     The hardest part was the first two weeks' total lack of progress. It was an
     individual project; myself and one other candidate were the only ones to take
     up the challange. We combined research efforts until we found the DirectX SDK
     and the accompanying sample code as a starting point. He went FPS, I went
-    flight-sim.
+    flight-sim.<br />
     The end result was a 3D cube sky-box with a nice wrapping skyline and a
     textured floor (which tiles nicely, thanks 3D Studio Max) containing a .x model
     of an aircraft somewhere inside it. The craft position was fixed in x- and z-
     axes, but was free to move up and down on y. The illusion of movement is
     created by constantly adjusting the texture offset on the floor. Height is
-    restricted by means of an engine-stall, and a crash at the bottom.
+    restricted by means of an engine-stall, and a crash at the bottom.<br />
+    <br />
     This was my first encounter with 3D graphics. It also incorporates sound and
-    UI elements. All sprites were created by myself using MS Paint.
+    UI elements. All sprites were created by myself using MS Paint.<br />
     I remember scratching my head about why 3.14 ("wait, that's pi!") rotated
     the reversed model to face the right direction, and not 180; first encounter
     with radians.
@@ -72,16 +75,18 @@
     was simply a project management application, to manage files and links between
     them to ease the use of MicroStation, a CAD package in use by the architects in
     the studio. This then flowed over into development of Site Capacity, and an
-    indefinite contract with them (which lasted 5 good years).
+    indefinite contract with them (which lasted 5 good years).<br />
+    <br />
     Site Capacity is a tool used by the practice to aid in quick generation of
     urban layouts. I was fortunate enough to work on this with <a href="http://www.linkedin.com/profile/view?id=50908910">Renee Puusepp</a>.
     It involved programatic distribution of pre-created geometrical objects along
     user-defined paths. It also touched on Business Information Modeling (BIM),
     essentially just embedding meta-data into the geometry for better programatic
-    management and evaluation of constructions.
+    management and evaluation of constructions.<br />
+    <br />
     This project introduced me to agile develompent methods, extreme- and
     pair-programming. It was the first time I got to use an API to a 3D environemnt
-    , and also the first time being paid to do coding.. happy.
+    , and also the first time being paid to do coding.. happy.<br />
     You can read more of Site Capacity at <a href="http://www.sitecapacity.com/">http://www.sitecapacity.com/</a>
     Much thanks to <a href="http://www.linkedin.com/profile/view?id=335054">Frank Leonhardt</a> both a consultant to Slider, and lecturer at
     UEL, for the introduction to Slider, and the kick-off to my career.
@@ -101,15 +106,15 @@
     reflecting user-defined personalities by means of distribution. It is a step
     towards having tables and chairs sort themselves into appropriate layouts,
     taking the mundane task of spatial distribution away from the architect. No
-    agents were harmed during the development of this software.
-    
+    agents were harmed during the development of this software.<br />
+    <br />
     I hope to make the power of Agent available to the casual CAD user. The ideal
     outcome is to create a tool for Google SketchUp which allows the user to turn
     3D components into intelligent objects with relative ease. These objects
     should be capable of aligning, distancing and orientating themselves in
     relation to their peers according to behaviour sets specified by the user.
     The desired result is that these components can achieve a “good” distribution
-    on their own.
+    on their own.-
     </details>
   </div>
 </article>
@@ -158,7 +163,8 @@
       The Drivers of Change project is driven by the foresight team of Arup, a large,
       multi-national company. They saw the need to manage an ever-growing database
       containing data gathered through events on the use an popularity (in voting) of
-      what they refer to as Drivers of Change cards.
+      what they refer to as Drivers of Change cards.<br />
+      <br />
       We implemented a RESTful API to a slightly re-designed version of the existing
       database. It allowed for authentication to modify, and open read access to
       various resource endpoints. Data could be shifted in XML or JSON formats via
@@ -215,14 +221,16 @@
     We were given the assignment to produce either a demo showing integration with
     a middleware of our choosing (Box2D and Bullet being the most prominent options
     as these were covered during the course) or write a useful tool. I dug in for
-    the latter.
+    the latter.<br />
+    <br />
     During lectures there was mention of "impostors" or "sprites" as I know them.
     These are still used today in games as a means of saving resources when drawing
     distan objects (instead of 3D models) where you can get away with low detail.
     I remembered rotating a QuakeII quad-damage model at 30 degree angle steps and
     making screen-shots to assemble them into an animated windows cursor, for
     personal use back in school, and thought a tool do do this kind of thing for
-    you would be useful, thus: Impostorisor was born.
+    you would be useful, thus: Impostorisor was born.<br />
+    <br />
     The Tool takes as input a 3D model in .geom format (<a href="http://andythomason.com/">Andy Thomason</a>'s work) and
     spits out a single image with a grid of frames at stepped angle rotations of
     the input model against a black background.
@@ -241,7 +249,8 @@
     <details class="span12">
     "Write a 2D game using OpenGL and C++"; this was fun. Having had my head re-
     wrapped around OpenGL and C++, I set out to make a classic, top-down, space
-    shooter scroller game.
+    shooter scroller game.<br />
+    <br />
     There isn't much to say about it, but I'm quite happy with what I was able to
     accomplish in a very short space of time (~1 week while working part-time and
     attending Uni). The code can be seen on my github account as linked to above.

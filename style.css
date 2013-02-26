@@ -58,7 +58,7 @@ footer .update {
 /* PORTFOLIO */
 #portfolio article {
   margin-top: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 #portfolio article h4 {
   display: inline-block;
@@ -84,6 +84,7 @@ footer .update {
 #portfolio details {
   clear: both;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 #portfolio article .read-more {
 
@@ -119,9 +120,9 @@ footer .update {
 #portfolio .tech span.CAD { background-color: #CCF621; }
 #portfolio .tech span.CS { background-color: #048198; }
 #portfolio .tech span.MySQL { background-color: #0F4DA8; }
+#portfolio .images { text-align: center; }
 #portfolio .images img {
-  margin-left: 32px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 
 @media screen and (max-width: 720px) {
