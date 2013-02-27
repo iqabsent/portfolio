@@ -1,20 +1,23 @@
 <div id="contact">
-  <address>
+  <address><i class="icon icon-map-marker"></i>
     Currently resident in the Beckton area
     London, E5 (UK)
   </address>
-  <span><i class="icon"></i>
+  <span><i class="icon icon-envelope"></i>
     <span id="replace"></span>
     <script type="text/javascript">
+      var email = function(){
+        return "willembvdmerwe[at]gmail[dot]com".replace("[dot]",".").replace("[at]","@");
+      }
       jQuery('#replace').html(
-        replace("[dot]",".",replace("[at]","@","willembvdmerwe[at]gmail[dot]com"));
+        "<a href='mailto:"+email()+"'>"+email()+"</a>"
       );
     </script>
-  </span>
+  </span><br />
+  <span><i class="icon icon-phone">m. </i>&nbsp;+44 (0)7855 384 586</span>
   <div id="connect">
-    <img src="images/icons/facebook.png" alt="facebook" />
-    <img src="images/icons/linkedin.png" alt="linkedin" />
-    <img src="images/icons/youtube.png" alt="youtube" />
-    <img src="images/icons/googleplus.png" alt="googleplus" />
+    <a href="http://www.facebook.com/willem.merwe.12" class="social facebook" alt="Facebook"></a>
+    <a href="http://uk.linkedin.com/pub/willem-van-der-merwe/2a/b8b/529" class="social linkedin" alt="LinkedIn"></a>
+    <a href="https://plus.google.com/u/0/113178980815171795258" class="social googleplus" alt="GooglePlus"></a>
   </div>
 </div>

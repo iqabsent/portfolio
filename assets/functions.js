@@ -13,9 +13,15 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
     // "page", the URL (href) of $(this), this being the link which was clicked
     $("#page").load($(this).attr("href"), function(response, status){
       $("#page").css('height','auto');  // adjust page height
+      window.scrollTo(0, 0);  // scroll to top
       if(status == "error") { // load the 404 page if there's an error
         $("#page").load("pages/404.html");
       }
     });
+  });
+  
+  $(document).on('click', "div.tech span", function() {
+    var filter_class = $(this).attr("class") || "";
+    $("article:not(:has(.tech span."+filter_class+"))").hide();
   });
 });

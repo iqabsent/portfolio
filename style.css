@@ -50,9 +50,33 @@ footer .update {
   border: 1px solid #DDDDDD;
 }
 
-/* WORK */
-#work li h4 {
+/* CONTACT */
+.social {
   display: inline-block;
+  width: 48px;
+  height: 48px;
+  background: url("images/social-media-icons.png");
+}
+.facebook { background-position: 0px 0px; }
+.linkedin { background-position: 0px -48px; }
+.googleplus { background-position: -48px -48px; }
+#connect {
+  margin-top: 25px;
+}
+
+/* WORK */
+#work article {
+  margin-top: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #DDDDDD;
+  min-height: 140px;
+}
+#work article time {
+  float: right;
+}
+#work article .logo {
+  float: right;
 }
 
 /* PORTFOLIO */
@@ -81,7 +105,7 @@ footer .update {
 #portfolio article .tech {
   margin-bottom: 10px;
 }
-#portfolio details {
+#portfolio .detail {
   clear: both;
   overflow: hidden;
   margin-bottom: 10px;
@@ -109,6 +133,7 @@ footer .update {
   border-collapse: separate;
   border-spacing: 0;
 }
+#portfolio .tech span{ cursor:pointer; }
 #portfolio .tech span.C { background-color: #F30021; }
 #portfolio .tech span.GL { background-color: #FF7700; }
 #portfolio .tech span.HTML { background-color: #04819E; }
@@ -120,6 +145,7 @@ footer .update {
 #portfolio .tech span.CAD { background-color: #CCF621; }
 #portfolio .tech span.CS { background-color: #048198; }
 #portfolio .tech span.MySQL { background-color: #0F4DA8; }
+#portfolio .tech span.SRC { background-color: #62A644; }
 #portfolio .images { text-align: center; }
 #portfolio .images img {
   margin-bottom: 15px;
