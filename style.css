@@ -78,7 +78,7 @@ footer .update {
 #portfolio article time, #portfolio section time {
   float: right;
 }
-#portfolio article .tech {
+#portfolio article .tag {
   margin-bottom: 10px;
 }
 #portfolio details {
@@ -91,7 +91,7 @@ footer .update {
 #portfolio a.reference {
   margin-left: 20px;
 }
-#portfolio .tech span {
+#portfolio .tag span {
   border-radius: 3px 3px 3px 3px;
   background-color: #999999;
   color: #FFFFFF;
@@ -107,18 +107,26 @@ footer .update {
   text-align: left;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 0 3px 4px 0;
 }
-#portfolio .tech span.C { background-color: #F30021; }
-#portfolio .tech span.GL { background-color: #FF7700; }
-#portfolio .tech span.HTML { background-color: #04819E; }
-#portfolio .tech span.JS { background-color: #34D800; }
-#portfolio .tech span.DX { background-color: #A600A6; }
-#portfolio .tech span.PHP { background-color: #4012AF; }
-#portfolio .tech span.JSON { background-color: #FFD300; }
-#portfolio .tech span.GLSL { background-color: #FFD900; }
-#portfolio .tech span.CAD { background-color: #CCF621; }
-#portfolio .tech span.CS { background-color: #048198; }
-#portfolio .tech span.MySQL { background-color: #0F4DA8; }
+#portfolio .tag span.C { background-color: #F30021; }
+#portfolio .tag span.GL { background-color: #FF7700; }
+#portfolio .tag span.HTML { background-color: #04819E; }
+#portfolio .tag span.JS { background-color: #34D800; }
+#portfolio .tag span.DX { background-color: #A600A6; }
+#portfolio .tag span.PHP { background-color: #4012AF; }
+#portfolio .tag span.JSON { background-color: #FFD300; }
+#portfolio .tag span.GLSL { background-color: #FFD900; }
+#portfolio .tag span.CAD { background-color: #CCF621; }
+#portfolio .tag span.CS { background-color: #048198; }
+#portfolio .tag span.MySQL { background-color: #0F4DA8; }
+#portfolio .tag span.CAPACITY {
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  color: #646464; 
+}
+
+
 #portfolio .images img {
   margin-left: 32px;
   margin-bottom: 5px;
