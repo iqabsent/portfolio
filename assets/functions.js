@@ -20,8 +20,9 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
     });
   });
   
-  $(document).on('click', "div.tech span", function() {
+  $(document).on('click', "div.tag span", function() {
     var filter_class = $(this).attr("class") || "";
-    $("article:not(:has(.tech span."+filter_class+"))").hide();
+    $("article").show();
+    $("article:not(:has(.tag span."+filter_class+"))").hide();
   });
 });
