@@ -120,7 +120,20 @@ footer .update {
 #portfolio-page a.reference {
   margin-left: 20px;
 }
-#portfolio-page .tag span {
+#portfolio-page #filter-wrapper {
+  border: 1px solid #D4D4D4;
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+  padding: 10px;
+}
+#portfolio-page .filter-block  label {
+  float: left;
+}
+#portfolio-page .filter-block  .tag.lang {margin-left: 80px;}
+#portfolio-page .filter-block  .tag.tech {margin-left: 94px;}
+#portfolio-page .filter-block  .tag.cap {margin-left: 66px;}
+#portfolio-page .tag span
+{
   border-radius: 3px 3px 3px 3px;
   background-color: #999999;
   color: #FFFFFF;
@@ -138,6 +151,7 @@ footer .update {
   border-spacing: 0;
   margin: 0 2px 4px 0;
   cursor: pointer;
+  white-space: normal;
 }
 #portfolio-page .tag span.C { background-color: #A2E01B; }
 #portfolio-page .tag span.CS { background-color: #E0C91B; }
@@ -146,7 +160,9 @@ footer .update {
 #portfolio-page .tag span.GLSL { background-color: #E01B9B; }
 #portfolio-page .tag span.HTML { background-color: #BF1BE0; }
 #portfolio-page .tag span.JS { background-color: #631BE0; }
+#portfolio-page .tag span.JQ { background-color: #631BE0; }
 #portfolio-page .tag span.NJS { background-color: #631BE0; }
+#portfolio-page .tag span.SC { background-color: #391BE0; }
 #portfolio-page .tag span.PHP { background-color: #1B7AE0; }
 #portfolio-page .tag span.MySQL { background-color: #1BAFE0; }
 #portfolio-page .tag span.JSON { background-color: #1BE0C6; }
@@ -160,9 +176,14 @@ footer .update {
   border: 1px solid #CCCCCC;
   color: #646464; 
 }
+#portfolio-page .tag span.HIDE {
+  display: none;
+}
+#portfolio-page .images  {
+  text-align: center;
+}
 #portfolio-page .images img {
   margin-bottom: 15px;
-  text-align: center;
 }
 
 @media screen and (max-width: 720px) {
@@ -173,6 +194,7 @@ footer .update {
 }
 @media screen and (max-width: 500px) {
   .over500 { display: none; }
+  #portfolio-page .filter-block  .tag { margin-left: 0 !important; }
 }
 @media screen and (max-width: 310px) {
   .over310 { display: none; }

@@ -54,7 +54,7 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
   loadPage(hash); // load the page
   
   // filtering by tag
-  $(document).on('click', "div.tag span", function() {
+  $(document).on('click', ".tag span", function() {
     var filter_class = $(this).attr("class") || "";
     $("article").show();  // show all articles
     // hide the ones which not has tag filtered for
