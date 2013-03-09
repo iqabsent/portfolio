@@ -10,6 +10,7 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
     // and load href into page container
     $("#page").load(path, function(response, status){
       // when that's done..
+      setHash(menu_id);                  // set hash
       $("#page").css('height','auto');  // adjust page height
       window.scrollTo(0, 0);            // scroll to top
       if(status == "error") {           // load 404 page if there's an error
@@ -22,7 +23,6 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
   $("nav li a").click(function(e){  // a click on <a> inside <li> inside <nav>
     e.preventDefault();             // stop the link from firing
     var target = $(this).attr('id');
-    setHash(target);                // set hash
     loadPage(target);               // load the page
   });
   
@@ -32,25 +32,28 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
   } else if (window.attachEvent) {
     window.attachEvent("onhashchange", hashChange);
   }
-  function hashChange() {
-    if(window.location.hash == "#top")
-      setHash(currentPage().replace('-page',''));    
+  function hashChange(e) {
+    if( window.location.hash == "#top") {
+      setHash(currentPage()); // if it's a top link, restore correct hash
+    } else if(window.location.hash.substr(1) != currentPage()){
+      loadPage(window.location.hash.substr(1)); // if not and the page isn't loaded, load it
+    }
   }
   
   function setHash(hash) {
     // trick to stop the page from scrolling when setting the hash
-    $('html').attr('id', hash);   // set id of <html> to target
+    $('html').attr('id', hash);   // set id of <html> to hash
     // without trick, this next line does unwanted srolling
     window.location.hash = hash;  // set on-page/local link (the # bit of url)
     $('html').attr('id', "");     // undo the trick
   }
   
   function currentPage() {
-    return $('#page').children(':first-child').attr('id');
+    return $('#page').children(':first-child').attr('id').replace('-page','');
   }
  
   // check for a local hash link (if any) or use "hello"
-  var hash = window.location.hash.replace('#','') || "hello";  
+  var hash = window.location.hash.substr(1) || "hello";  
   loadPage(hash); // load the page
   
   // filtering by tag
