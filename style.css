@@ -71,16 +71,20 @@ footer .update {
 /* WORK */
 #work-page article {
   margin-top: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid #DDDDDD;
   min-height: 140px;
 }
 #work-page article time {
   float: right;
+  margin-right: 15px;
 }
 #work-page article .logo {
   float: right;
+}
+#work-page h4 {
+  display: inline;
 }
 
 /* PORTFOLIO */
@@ -185,8 +189,24 @@ footer .update {
 #portfolio-page .images img {
   margin-bottom: 15px;
 }
-#portfolio-page .images iframe {
-  
+#portfolio-page .images iframe { 
+}
+
+/* EDUCATION */
+#education-page article time {
+  float: right;
+}
+#education-page article h4,
+#education-page article h5
+{
+  display: inline;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+/* ME */
+#me-page .center {
+  text-align: center;
 }
 
 @media screen and (max-width: 720px) {

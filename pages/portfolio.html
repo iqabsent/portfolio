@@ -95,7 +95,7 @@
     <span class="C">C++</span>
   </div>
   <div class="row">
-    <div class="detail span12">
+    <div class="detail span6">
     At the very end of a 2-year course dealing purely with syntax and usage of
     several programming languages along with various database connectors, we were
     given the opportunity to write a database system .. or a 3D game. This second
@@ -119,8 +119,8 @@
     the reversed model to face the right direction, and not 180; first encounter
     with radians.
     </div>
-    <div class="images pull-right span12">
-      <iframe class="pull-left" width="320" height="180" src="http://www.youtube.com/embed/mwJXQNyX6BE?rel=0" frameborder="0" allowfullscreen></iframe>
+    <div class="images pull-right span6">
+      <iframe width="320" height="180" src="http://www.youtube.com/embed/mwJXQNyX6BE?rel=0" frameborder="0" allowfullscreen></iframe>
       <img src="images/DX-Game.jpg" alt="DirectX Game"/>
     </div>
   </div>
@@ -434,7 +434,7 @@
     <span class="SC HIDE">Git</span>
   </div>
   <div class="row">
-    <div class="detail span12">
+    <div class="detail span6">
     A quick demonstration of terrain generation using an implimentation of Perlin
     noise. This done in collaboration with <a href="http://uk.linkedin.com/in/wmasek">Will Masek</a>.
     We were team Will (him #1, I was #0; I then I started using my real name which
@@ -446,7 +446,7 @@
     I, Willem, set out to develop an implimentation of the Perlin Noise algorithm
     to feed height values to this function in order to generate viable terrain.
     </div>
-    <div class="images span12">
+    <div class="images span6">
       <img src="images/Terrain-Low-Clamp.png" alt="Terrain Generation"/>
       <img src="images/Terrain-High-Clamp.png" alt="Terrain Generation"/>
     </div>
@@ -465,8 +465,40 @@
     <span class="SC HIDE">Git</span>
   </div>
   <div class="row">
+    <div class="detail span6">
+      This was a bit of a nightmare .. I loved it.<br />
+      The problem here wasn't the fluid simulation itself, but rather the limits of
+      OpenGL ES 2.0 and GLSL v1.1 as supported by current iDevices.
+      <br /><br />
+      The idea was to take an existing fluid dynamic simulation, and port it to run
+      on an iPhone/iPad. For this, we found some great work here <a href="http://prideout.net/blog/?p=58">http://prideout.net/blog/?p=58</a>
+      and fell down the iOS rabbit hole to start our porting adventure.
+      <br /><br />
+      On this project, I had the opportunity to work with <a href="http://www.linkedin.com/profile/view?id=14781823">Per Griffiths</a>; we spent many
+      hours looking at a small screen displaying a blue dot, and a very static white
+      splat near the bottom.
+      <br />
+    </div>
+    <div class="images span6">
+      <img src="images/Dynamic-fluid-sim.jpg" alt="Dynamic Fluid Sim"/>
+    </div>
     <div class="detail span12">
-    <a href="http://www.linkedin.com/profile/view?id=14781823">Per Griffiths</a>
+      Even though we managed to get 99% of the code ported to GLSL v1.1, compiling
+      and running in an OpenGL ES 2.0 render loop on an iPad, there was one single
+      GLSL v1.5+ function we were unable to find a suitable substitute for in GLSL
+      v1.1.
+      <br />
+      Since we spent a lot of time on this, we kept at it for some time after the
+      project deadline (and an akward final presentation) had come and gone.
+      In the end, due to other demands on our time, we had to put our hands up and
+      concede defeat. We were not able to achieve a working port. We do not,
+      however, see this project as a failure. We were both content with the outcome
+      in terms of how much we managed to learn. We both gained much knowledge of GLSL
+      v1.1 and its limitations; unfortunately though, knowledge is invisible and doesn't
+      display well as HTML5 markup either.. so I hope that future work will allow us
+      to flex our GLSL
+      <br /><br />
+      This was a native iOS application, so UIKit was explored too, but barely used.
     </div>
   </div>
 </article>
@@ -485,7 +517,7 @@
     <div class="detail span12">
       A big chunk of the MSc Computer Games and Entertainment course revolves
       around building a game engine and a first-slice game demo to show off its
-      capabilities. This is a group excersise where we were to form two teams;
+      capabilities. This was a group excersise where we were to form two teams;
       the Engine Team and the Demo Team. We were free to roam and help achieve
       milestones on either or both as we saw fit. We each found our role; mine
       turned out to be script lead on the Demo Team, and later animation scripting
