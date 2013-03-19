@@ -93,6 +93,7 @@
     <span class="MISC">Misc</span>
     <span class="DX">DirectX 7 SDK</span>
     <span class="C">C++</span>
+    <a class="reference" href="assets/builds/3dgame.zip">download</a>
   </div>
   <div class="row">
     <div class="detail span6">
@@ -151,8 +152,8 @@
     essentially just embedding meta-data into the geometry for better programatic
     management and evaluation of constructions.<br />
     <br />
-    This project introduced me to agile develompent methods, extreme- and
-    pair-programming. It was the first time I got to use an API to a 3D environemnt
+    This project introduced me to agile development methods, extreme- and
+    pair-programming. It was the first time I got to use an API to a 3D environment
     , and also the first time being paid to do coding.. happy.<br />
     You can read more of Site Capacity at <a href="http://www.sitecapacity.com/">http://www.sitecapacity.com/</a>
     Much thanks to <a href="http://www.linkedin.com/profile/view?id=335054">Frank Leonhardt</a> both a consultant to Slider, and lecturer at
@@ -292,19 +293,19 @@
       <span class="JS">JavaScript</span>
       <span class="JQ">jQuery</span>
       <span class="SC">Git</span>
+      <a class="reference" href="http://www.treethorpe.com/">http://www.treethorpe.com/</a>
     </div>
-    http://www.treethorpe.com/
     TCAS is a case administration system I designed and developed as sole developer
     for Treethrope LTD. It's used by them to keep track of case details and ongoing
     case research. This web-based application is was built using PHPFrame over the
     course of 3 months. Here I was already able to estimate development time of
-    features with fair accuracy, as I had experience in using PHPFrame with
+    features with fair accuracy as I had experience with using PHPFrame in
     development of the DoC API. It was the first time I stepped through a full
     development cycle on this scale. Permissions, access levels and authorisation
     to access specific resources with rights to execute specific operations on
-    these was a fun problem to have solved.Knowledge was gained in project
+    these was a fun problem to have solved. Knowledge was gained in project
     management and client relations. I also did a lot of JavaScript optimisation
-    and realised the difference in performance between jQuery and native JS code.
+    and realised the difference in performance between jQuery and pure JavaScript.
   </article>
 </section>
 
@@ -358,7 +359,7 @@
     spits out a single image with a grid of frames at stepped angle rotations of
     the input model against a black background.
     This project saw me step into the world of OpenGL (similar to DirectX, so not
-    totally new) and re-aquainted with my good friend C++. It looked diferent after
+    totally new) and re-acquainted with my good friend C++. It looked different after
     years of PHP and JavaScript.
     </div>
     <div class="images span6">
@@ -430,8 +431,9 @@
   <div class="tag">
     <span class="MSC">M.Sc.</span>
     <span class="C">C++</span>
-    <span class="GL">OpenGL</span>
+    <span class="DX">DirectX 9</span>
     <span class="SC HIDE">Git</span>
+    <a class="reference" href="assets/builds/terraingeneration.zip">download</a>
   </div>
   <div class="row">
     <div class="detail span6">
@@ -459,6 +461,7 @@
   <div class="tag">
     <span class="MSC">M.Sc.</span>
     <span class="C">C++</span>
+    <span class="OC">Objective C</span>
     <span class="GL ES2">OpenGL ES 2.0</span>
     <span class="GLSL">GLSL</span>
     <span class="IOS"><strike>UIKit</strike></span>
@@ -499,6 +502,48 @@
       to flex our GLSL
       <br /><br />
       This was a native iOS application, so UIKit was explored too, but barely used.
+    </div>
+  </div>
+</article>
+
+<article class="span12">
+  <h4>Ocean Waves</h4> <time>2013</time>
+  <h5>Maths and Graphics (Assignment, Individual)</h5>
+  <div class="tag">
+    <span class="MSC">M.Sc.</span>
+    <span class="C">C++</span>
+    <span class="DX">DirectX 9</span>
+    <a class="reference" href="assets/builds/oceanwaves.zip">download</a>
+  </div>
+  <div class="row">
+    <div class="detail span6">
+    A deep-ocean wave simulation using sine waves. We were to use DirectX 9, C++
+    and rtvs, the Mathemator, <a href="http://uk.linkedin.com/pub/gareth-edwards/4/9b6/370">Gareth Edwards</a> work.
+    <br />
+    A lot of the heavy lifting is done by algorithms produced by the Mathemator.
+    The majority of the remainder is based on work by <a href="http://uk.linkedin.com/pub/tudor-nita/4b/1b3/b48">Tudor Nita</a>
+    I worked backwards from this, stripping it down to a point I could grasp all
+    mechanisms involved. In some cases I found more elegant solutions to achieve
+    the same effect, in others, either Mathemator or Tudor's (well documented) code
+    was hard to beat in simplicity and elegance.. so it was reused.
+    <br /><br />
+    This ws also my first integration with <a href="http://anttweakbar.sourceforge.net/doc/">
+    AntTweakBar</a>; it will not be the last.
+    <br /><br />
+    The simulation morphs a triangle mesh by adjusting the height values of
+    vertices according to the average height value of 8 separate sine waves.
+    Parameters for each wave can be adjusted (thanks, AntTweakBar) as can the
+    colour values of the wave and speed of animation.
+    <br /><br />
+    For each frame, normals are recalculated and averaged (thanks, Tudor) and
+    the material recoloured to suit.
+    <br /><br />
+    Thanks also to HipShot @ www.zfight.com for the
+    <a href="http://www.zfight.com/misc/images/textures/envmaps/grimmnight_large.jpg">awesome skybox texture</a>.
+    </div>
+    <div class="images pull-right span6">
+      <iframe width="320" height="240" src="http://www.youtube.com/embed/ZkeWdPrAGII?rel=0" frameborder="0" allowfullscreen></iframe>
+      <img src="images/Ocean-Waves.jpg" alt="Deep-ocean Wave Simulation"/>      
     </div>
   </div>
 </article>

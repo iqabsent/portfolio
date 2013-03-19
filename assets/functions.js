@@ -52,8 +52,8 @@ $(document).ready(function(){ // this runs as soon as the page has loaded
     return $('#page').children(':first-child').attr('id').replace('-page','');
   }
  
-  // check for a local hash link (if any) or use "hello"
-  var hash = window.location.hash.substr(1) || "hello";  
+  // check for a local hash link (if any) or use "portfolio"
+  var hash = window.location.hash.substr(1) || "portfolio";  
   loadPage(hash); // load the page
   
   // filtering by tag
