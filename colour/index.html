@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Boulder Hold Detector</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Boulder">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%; background: #000; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    canvas { display: block; width: 100%; height: auto; max-height: 100%; touch-action: manipulation; cursor: crosshair; }
+    video  { display: none; }
+
+    #ui-top {
+      position: fixed; top: 16px; left: 16px;
+      display: flex; align-items: center; gap: 10px;
+      pointer-events: none;
+    }
+    #swatch {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      background: transparent; flex-shrink: 0;
+    }
+    #label { color: #fff; font: 13px/1.4 monospace; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+    #ui-bottom {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;
+    }
+    .mode-btn {
+      background: rgba(0,0,0,0.55); color: #fff;
+      border: 1px solid rgba(255,255,255,0.35); border-radius: 20px;
+      padding: 6px 16px; font: 13px monospace; cursor: pointer;
+    }
+    .mode-btn.active { background: rgba(255,255,255,0.2); border-color: #fff; }
+
+    #tol-wrap {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px; padding: 6px 14px;
+    }
+    #tol-wrap label { color: #fff; font: 12px monospace; white-space: nowrap; }
+    #tol-range { accent-color: #fff; width: 80px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
+
+  <div id="ui-top">
+    <div id="swatch"></div>
+    <span id="label">tap a hold to select its colour</span>
+  </div>
+
+  <div id="ui-bottom">
+    <button class="mode-btn active" data-mode="0">highlight</button>
+    <button class="mode-btn"        data-mode="1">edges</button>
+    <button class="mode-btn"        data-mode="2">camera</button>
+    <div id="tol-wrap">
+      <label>match <span id="tol-val">18</span></label>
+      <input type="range" id="tol-range" min="5" max="40" value="18">
+    </div>
+    <div id="tol-wrap">
+      <label>edge <span id="eth-val">15</span>%</label>
+      <input type="range" id="eth-range" min="1" max="40" value="15">
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+
+  // ── Shaders ──────────────────────────────────────────────────────────────
+  //
+  // Three-pass pipeline:
+  //   Pass 1  FRAG_EDGE    webcam texture → edge FBO       (Sobel on luminance)
+  //   Pass 1½ FRAG_SPREAD  seed + edge → region FBO        (jump-flood spreading, fires on tap)
+  //   Pass 2  FRAG_COMBINE cam + edge + region → screen    (LAB colour match + region highlight)
+
+  const VERT = `
+    attribute vec2 position;
+    void main() { gl_Position = vec4(position, 0.0, 1.0); }
+  `;
+
+  // ── Pass 1: Sobel edge detection ─────────────────────────────────────────
+  const FRAG_EDGE = `
+    precision highp float;
+    uniform float uW;
+    uniform float uH;
+    uniform sampler2D uCam;
+
+    float lum(vec3 c) { return dot(vec3(0.2126, 0.7152, 0.0722), c); }
+
+    // gl_FragCoord is in canvas pixels (y=0 at bottom).
+    // The video texture has y=0 at top, so we flip y here.
+    vec2 uv(float x, float y) { return vec2(x, uH - y) / vec2(uW, uH); }
+
+    float s(float ox, float oy) {
+      return lum(texture2D(uCam, uv(gl_FragCoord.x + ox, gl_FragCoord.y + oy)).rgb);
+    }
+
+    void main() {
+      // Sobel 3×3 on luminance
+      float gx = s(-1., 1.) + 2.*s(-1., 0.) + s(-1.,-1.)
+                - s( 1., 1.) - 2.*s( 1., 0.) - s( 1.,-1.);
+      float gy = s(-1., 1.) + 2.*s( 0., 1.) + s( 1., 1.)
+                - s(-1.,-1.) - 2.*s( 0.,-1.) - s( 1.,-1.);
+      float e = sqrt(gx*gx + gy*gy);
+      gl_FragColor = vec4(e, e, e, 1.0);
+    }
+  `;
+
+  // ── Pass 2: colour match + highlight ─────────────────────────────────────
+  const FRAG_COMBINE = `
+    precision highp float;
+    uniform float uW;
+    uniform float uH;
+    uniform sampler2D uCam;
+    uniform sampler2D uEdge;
+    uniform vec3  uTargets[2];
+    uniform int   uHasTarget;
+    uniform int   uMode;       // 0=highlight  1=edges  2=camera
+    uniform float uTolerance;
+    uniform sampler2D uRegion;
+    uniform int   uHasRegion;
+
+    const float PI  = 3.14159265359;
+    const float TAU = 6.28318530718;
+    const vec3  WHITE = vec3(0.95046, 1.0, 1.08906); // D65
+
+    vec2 uv(vec2 fc) { return vec2(fc.x, uH - fc.y) / vec2(uW, uH); }
+
+    // Approximate CIELAB conversion.
+    // Input is sRGB [0,1]; we skip the sRGB→linear and linear→XYZ steps
+    // (same approximation as the original colour-filter.js) and treat
+    // the RGB values directly as XYZ-scaled by the D65 white point.
+    float labf(float x) {
+      return x > 0.008856 ? pow(x, 0.33333) : 7.787*x + 0.13793;
+    }
+    vec3 toLab(vec3 rgb) {
+      vec3 s = rgb / WHITE;
+      s = vec3(labf(s.x), labf(s.y), labf(s.z));
+      return vec3(116.0*s.y - 16.0, 500.0*(s.x - s.y), 200.0*(s.y - s.z));
+    }
+
+    // CIE2000 ΔE — perceptual colour difference.
+    // Bug fix vs original: Cb uses (C1+C2)/2, not C1 twice.
+    // dtheta uses 25°→radians denominator (0.4363) for dimensional consistency.
+    float deltaE(vec3 a, vec3 b) {
+      vec3 la = toLab(a), lb = toLab(b);
+
+      float C1 = length(la.yz), C2 = length(lb.yz);
+      float Cb  = (C1 + C2) * 0.5;
+      float Cb7 = pow(Cb, 7.0);
+      float G   = 0.5 * (1.0 - sqrt(Cb7 / (Cb7 + 6103515625.0)));
+
+      float ap1 = la.y * (1.0 + G),  ap2 = lb.y * (1.0 + G);
+      float Cp1 = sqrt(ap1*ap1 + la.z*la.z);
+      float Cp2 = sqrt(ap2*ap2 + lb.z*lb.z);
+      float hp1 = atan(la.z, ap1); if (hp1 < 0.0) hp1 += TAU;
+      float hp2 = atan(lb.z, ap2); if (hp2 < 0.0) hp2 += TAU;
+
+      float dLp = lb.x - la.x;
+      float dCp = Cp2 - Cp1;
+      float dhp = hp2 - hp1;
+      dhp += (dhp >  PI) ? -TAU : ((dhp < -PI) ? TAU : 0.0);
+      float dHp = 2.0 * sqrt(Cp1*Cp2) * sin(dhp * 0.5);
+
+      float Lbp  = (la.x + lb.x) * 0.5;
+      float Cbp  = (Cp1 + Cp2)   * 0.5;
+      float Cbp7 = pow(Cbp, 7.0);
+      // Circular mean of hue angles; mod to keep in [0, TAU).
+      float hbp  = abs(hp1 - hp2) > PI
+                   ? mod((hp1 + hp2 + TAU) * 0.5, TAU)
+                   : (hp1 + hp2) * 0.5;
+
+      float T = 1.0 - 0.17*cos(hbp - 0.5236) + 0.24*cos(2.0*hbp)
+               + 0.32*cos(3.0*hbp + 0.1047)  - 0.20*cos(4.0*hbp - 1.0996);
+      float RC     = 2.0 * sqrt(Cbp7 / (Cbp7 + 6103515625.0));
+      // hbp is in radians; 275°=4.7997 rad, 25°=0.4363 rad
+      float dtheta = 30.0 * exp(-pow((hbp - 4.7997) / 0.4363, 2.0));
+      float RT     = -RC * sin(dtheta * PI / 90.0); // sin(2Δθ), Δθ in degrees
+
+      float Lbp2 = (Lbp - 50.0) * (Lbp - 50.0);
+      float SL = 1.0 + 0.015 * Lbp2 / sqrt(20.0 + Lbp2);
+      float SC = 1.0 + 0.045 * Cbp;
+      float SH = 1.0 + 0.015 * Cbp * T;
+
+      return sqrt(dLp*dLp/(SL*SL) + dCp*dCp/(SC*SC) + dHp*dHp/(SH*SH)
+                  + RT * dCp * dHp / (SC * SH));
+    }
+
+    void main() {
+      // uv() flips Y for video texture (image convention, Y=0 at top).
+      // FBO textures use standard WebGL orientation — sample with plain UV.
+      vec2  fboUv = gl_FragCoord.xy / vec2(uW, uH);
+      vec4  cam   = texture2D(uCam,  uv(gl_FragCoord.xy));
+      float edge  = texture2D(uEdge, fboUv).r;
+
+      if (uMode == 1) { gl_FragColor = vec4(edge, edge, edge, 1.0); return; }
+      if (uMode == 2) { gl_FragColor = cam; return; }
+      if (uHasRegion == 0 && uHasTarget == 0) { gl_FragColor = cam; return; }
+
+      bool matched = uHasTarget == 1 && (deltaE(cam.rgb, uTargets[0]) < uTolerance ||
+                                         deltaE(cam.rgb, uTargets[1]) < uTolerance);
+
+      if (matched) {
+        float stripe = mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) > 5.0 ? 1.0 : 0.0;
+        vec3 hl = mix(vec3(1.0, 0.85, 0.0), vec3(1.0, 0.4, 0.0), stripe);
+        gl_FragColor = vec4(mix(cam.rgb, hl, 0.65), 1.0);
+      } else {
+        gl_FragColor = vec4(cam.rgb * 0.35 + vec3(edge * 0.5), 1.0);
+      }
+    }
+  `;
+
+  // ── Pass 1½: jump-flood spreading ────────────────────────────────────────
+  // Runs log₂(max_dimension) times on tap, not every frame.
+  // Each pass spreads labeled pixels outward by `uStep` pixels in 8 directions,
+  // but never through pixels where the edge strength exceeds uEdgeThresh.
+  // Step halves each pass: 1280 → 640 → 320 … → 1, converging in ~11 passes.
+  const FRAG_SPREAD = `
+    precision highp float;
+    uniform float uW;
+    uniform float uH;
+    uniform sampler2D uSeed;
+    uniform sampler2D uEdge;
+    uniform sampler2D uCam;
+    uniform vec3  uTarget;
+    uniform float uStep;
+    uniform float uEdgeThresh;
+    uniform float uColourTol;
+
+    void main() {
+      vec2  selfUv   = gl_FragCoord.xy / vec2(uW, uH);
+      float edgeSelf = texture2D(uEdge, selfUv).r;
+
+      // Strong-edge pixels are barriers — they can never be part of a region.
+      if (edgeSelf > uEdgeThresh) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        return;
+      }
+
+      // Colour barrier: Sobel on luminance misses edges between same-brightness
+      // different-colour regions (e.g. green hold vs grey wall). Reject pixels
+      // whose RGB is too far from the tapped colour so the fill stays on the hold.
+      // Y flipped: FBO y=0 is bottom; cam texture y=0 is top.
+      vec2 camUv = vec2(gl_FragCoord.x, uH - gl_FragCoord.y) / vec2(uW, uH);
+      vec3 d = texture2D(uCam, camUv).rgb - uTarget;
+      if (dot(d, d) > uColourTol * uColourTol) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        return;
+      }
+
+      float found = texture2D(uSeed, selfUv).r;
+
+      // Check 8 neighbours at ±uStep. If any is already labeled and is not
+      // itself a barrier, propagate the label here.
+      for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = -1; dx <= 1; dx++) {
+          if (!(dx == 0 && dy == 0) && found < 0.5) {
+            vec2 nc = (gl_FragCoord.xy + vec2(float(dx), float(dy)) * uStep) / vec2(uW, uH);
+            if (nc.x >= 0.0 && nc.x <= 1.0 && nc.y >= 0.0 && nc.y <= 1.0) {
+              if (texture2D(uSeed, nc).r > 0.5 && texture2D(uEdge, nc).r < uEdgeThresh) {
+                found = 1.0;
+              }
+            }
+          }
+        }
+      }
+
+      gl_FragColor = vec4(found, found, found, 1.0);
+    }
+  `;
+
+  // ── WebGL boilerplate ─────────────────────────────────────────────────────
+
+  const canvas = document.getElementById('canvas');
+  const video  = document.getElementById('video');
+  const gl     = canvas.getContext('webgl');
+
+  if (!gl) {
+    document.getElementById('label').textContent = 'WebGL not supported';
+    throw new Error('no webgl');
+  }
+
+  function compile(type, src) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS))
+      throw new Error(gl.getShaderInfoLog(sh));
+    return sh;
+  }
+
+  function mkProg(fragSrc) {
+    const p = gl.createProgram();
+    gl.attachShader(p, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fragSrc));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS))
+      throw new Error(gl.getProgramInfoLog(p));
+    return p;
+  }
+
+  const edgeProg    = mkProg(FRAG_EDGE);
+  const spreadProg  = mkProg(FRAG_SPREAD);
+  const combineProg = mkProg(FRAG_COMBINE);
+
+  // Full-screen quad (two triangles, TRIANGLE_STRIP)
+  const quadBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([1,1, -1,1, 1,-1, -1,-1]), gl.STATIC_DRAW);
+
+  function useQuad(prog) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+    const loc = gl.getAttribLocation(prog, 'position');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  }
+
+  function u(prog, name) { return gl.getUniformLocation(prog, name); }
+
+  // ── FBO helpers ───────────────────────────────────────────────────────────
+
+  function mkTex(w, h) {
+    const t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    return t;
+  }
+
+  function mkFBO(w, h) {
+    const tex = mkTex(w, h);
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return { fbo, tex };
+  }
+
+  function dropFBO(buf) {
+    if (!buf) return;
+    gl.deleteFramebuffer(buf.fbo);
+    gl.deleteTexture(buf.tex);
+  }
+
+  // ── App state ─────────────────────────────────────────────────────────────
+
+  let camTex      = null;
+  let edgeBuf     = null;
+  let regionBufA  = null;  // ping-pong pair for spreading passes
+  let regionBufB  = null;
+  let regionResult = null; // points to whichever buffer has the final spread result
+  let targets     = null;   // [[r,g,b], [r,g,b]] k-means cluster centres; null before first tap
+  let mode        = 0;
+  let tolerance   = 18.0;
+  let edgeThresh  = 0.15;
+  let spreadPending = false;
+  let spreadCx = 0, spreadCy = 0;
+
+  // ── Render loop ───────────────────────────────────────────────────────────
+
+  function render() {
+    requestAnimationFrame(render);
+    if (!camTex) return;
+
+    const w = canvas.width, h = canvas.height;
+
+    // Upload latest webcam frame into the camera texture.
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, video);
+
+    // ── Pass 1: edge detection → FBO ──────────────────────────────────────
+    gl.bindFramebuffer(gl.FRAMEBUFFER, edgeBuf.fbo);
+    gl.viewport(0, 0, w, h);
+    gl.useProgram(edgeProg);
+    useQuad(edgeProg);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+    gl.uniform1i(u(edgeProg, 'uCam'), 0);
+    gl.uniform1f(u(edgeProg, 'uW'), w);
+    gl.uniform1f(u(edgeProg, 'uH'), h);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // ── Pass 1½: jump-flood spread (deferred from tap) ────────────────────
+    // Runs here so it reads the freshly-rendered edge buffer, and all texture
+    // state is fully reset before the combine pass below.
+    if (spreadPending) {
+      spreadPending = false;
+      runSpread(spreadCx, spreadCy);
+    }
+
+    // ── Pass 2: colour match + highlight → screen ─────────────────────────
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.useProgram(combineProg);
+    useQuad(combineProg);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+    gl.uniform1i(u(combineProg, 'uCam'), 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, edgeBuf.tex);
+    gl.uniform1i(u(combineProg, 'uEdge'), 1);
+
+    gl.uniform1f(u(combineProg, 'uW'), w);
+    gl.uniform1f(u(combineProg, 'uH'), h);
+    gl.uniform1i(u(combineProg, 'uMode'), mode);
+    gl.uniform1f(u(combineProg, 'uTolerance'), tolerance);
+    gl.uniform1i(u(combineProg, 'uHasTarget'), targets ? 1 : 0);
+    if (targets) gl.uniform3fv(u(combineProg, 'uTargets[0]'), [...targets[0], ...targets[1]]);
+
+    gl.uniform1i(u(combineProg, 'uHasRegion'), regionResult ? 1 : 0);
+    if (regionResult) {
+      gl.activeTexture(gl.TEXTURE2);
+      gl.bindTexture(gl.TEXTURE_2D, regionResult.tex);
+      gl.uniform1i(u(combineProg, 'uRegion'), 2);
+    }
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  // ── Resize ────────────────────────────────────────────────────────────────
+
+  function resize() {
+    canvas.width  = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    dropFBO(edgeBuf);
+    dropFBO(regionBufA);
+    dropFBO(regionBufB);
+    edgeBuf      = mkFBO(canvas.width, canvas.height);
+    regionBufA   = mkFBO(canvas.width, canvas.height);
+    regionBufB   = mkFBO(canvas.width, canvas.height);
+    regionResult = null;
+  }
+
+  // ── Jump-flood spreading ──────────────────────────────────────────────────
+  // Called once per tap. Seeds a single pixel in FBO space, then runs
+  // log₂(max_dimension) ping-pong passes through FRAG_SPREAD.
+  // The edge buffer must already contain a valid frame (guaranteed after setup).
+
+  function runSpread(cx, cy) {
+    const w = canvas.width, h = canvas.height;
+
+    // cx, cy are canvas buffer pixels with y=0 at top (CSS convention).
+    // FBO y=0 is at bottom, so we flip.
+    const fx = Math.max(0, Math.min(w - 1, Math.round(cx)));
+    const fy = Math.max(0, Math.min(h - 1, (h - 1) - Math.round(cy)));
+
+    // Initialise seed texture: 1×1 white pixel at the tap position, zeros elsewhere.
+    const seed = new Uint8Array(w * h * 4);
+    const si   = (fy * w + fx) * 4;
+    seed[si] = seed[si + 1] = seed[si + 2] = seed[si + 3] = 255;
+
+    // Use TEXTURE3 (not 0/1/2 which the render loop uses) to avoid polluting
+    // texture unit state. Unbind afterward so there's no stale binding.
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, regionBufA.tex);
+    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, seed);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    // Spread shader setup — uniforms that don't change between passes.
+    gl.useProgram(spreadProg);
+    useQuad(spreadProg);
+    gl.uniform1f(u(spreadProg, 'uW'), w);
+    gl.uniform1f(u(spreadProg, 'uH'), h);
+    gl.uniform1f(u(spreadProg, 'uEdgeThresh'), edgeThresh);
+    gl.viewport(0, 0, w, h);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, edgeBuf.tex);
+    gl.uniform1i(u(spreadProg, 'uEdge'), 0);
+
+    // Camera texture + colour barrier uniforms (target is the raw tapped pixel).
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+    gl.uniform1i(u(spreadProg, 'uCam'), 2);
+    gl.uniform3f(u(spreadProg, 'uTarget'), ...targets[0]);
+    gl.uniform1f(u(spreadProg, 'uColourTol'), 0.30);
+
+    // Ping-pong: start at max dimension, halve until below 1 pixel.
+    let src = regionBufA, dst = regionBufB;
+    let step = Math.max(w, h);
+
+    while (step >= 1) {
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, src.tex);
+      gl.uniform1i(u(spreadProg, 'uSeed'), 1);
+      gl.uniform1f(u(spreadProg, 'uStep'), step);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, dst.fbo);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      const tmp = src; src = dst; dst = tmp;
+      step = Math.floor(step / 2);
+    }
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    regionResult = src; // src holds the final result after the last swap
+
+    // Restore TEXTURE0 to camTex so the next render() frame doesn't inherit
+    // edgeBuf.tex on unit 0 (which would create a feedback loop in the edge pass).
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+
+    computeColourProfile();
+  }
+
+  // ── Colour profiling ──────────────────────────────────────────────────────
+  // Reads the flood-fill mask from the GPU, samples the current video frame
+  // for in-region pixels, then runs k-means (k=2) to find the dominant colours.
+  // readPixels row 0 = bottom of FBO; video y=0 = top — mapped below.
+  function computeColourProfile() {
+    if (!regionResult) return;
+    const w = canvas.width,  h  = canvas.height;
+    const vw = video.videoWidth, vh = video.videoHeight;
+
+    const mask = new Uint8Array(w * h * 4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, regionResult.fbo);
+    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, mask);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    const off = document.createElement('canvas');
+    off.width = vw; off.height = vh;
+    off.getContext('2d').drawImage(video, 0, 0);
+    const vid = off.getContext('2d').getImageData(0, 0, vw, vh).data;
+
+    // Collect in-region pixel colours into a flat [r,g,b, r,g,b, ...] array.
+    const pixFlat = [];
+    for (let row = 0; row < h; row++) {
+      for (let col = 0; col < w; col++) {
+        if (mask[(row * w + col) * 4] > 127) {
+          const vx = Math.min(vw - 1, Math.round(col * vw / w));
+          const vy = Math.min(vh - 1, Math.round((h - row) * vh / h));
+          const vi = (vy * vw + vx) * 4;
+          pixFlat.push(vid[vi] / 255, vid[vi + 1] / 255, vid[vi + 2] / 255);
+        }
+      }
+    }
+
+    const n = pixFlat.length / 3;
+    if (n === 0) return;
+    targets = kMeans(pixFlat, n, 2);
+    const [r0, g0, b0] = targets[0].map(v => Math.round(v * 255));
+    const [r1, g1, b1] = targets[1].map(v => Math.round(v * 255));
+    document.getElementById('swatch').style.background = `rgb(${r0},${g0},${b0})`;
+    document.getElementById('label').textContent =
+      `${n}px · rgb(${r0},${g0},${b0}) + rgb(${r1},${g1},${b1})`;
+  }
+
+  // k-means++ on flat [r,g,b, r,g,b, ...] pixel data (values in [0,1]).
+  // Returns k cluster centres as [[r,g,b], ...].
+  function kMeans(pixFlat, n, k, maxIter = 20) {
+    if (n <= k) {
+      return Array.from({length: k}, (_, j) => {
+        const i = j < n ? j : 0;
+        return [pixFlat[i*3], pixFlat[i*3+1], pixFlat[i*3+2]];
+      });
+    }
+
+    // k-means++ init: first centre random, subsequent centres prefer distant pixels.
+    const centres = [];
+    const fi = Math.floor(Math.random() * n);
+    centres.push([pixFlat[fi*3], pixFlat[fi*3+1], pixFlat[fi*3+2]]);
+
+    while (centres.length < k) {
+      const dists = new Float32Array(n);
+      let total = 0;
+      for (let i = 0; i < n; i++) {
+        let minD = Infinity;
+        for (const c of centres) {
+          const dr = pixFlat[i*3]-c[0], dg = pixFlat[i*3+1]-c[1], db = pixFlat[i*3+2]-c[2];
+          const d = dr*dr + dg*dg + db*db;
+          if (d < minD) minD = d;
+        }
+        dists[i] = minD;
+        total += minD;
+      }
+      let rand = Math.random() * total, idx = 0;
+      for (; idx < n - 1; idx++) { rand -= dists[idx]; if (rand <= 0) break; }
+      centres.push([pixFlat[idx*3], pixFlat[idx*3+1], pixFlat[idx*3+2]]);
+    }
+
+    const assign = new Int32Array(n);
+    for (let iter = 0; iter < maxIter; iter++) {
+      let moved = false;
+      for (let i = 0; i < n; i++) {
+        let best = 0, bestD = Infinity;
+        for (let j = 0; j < k; j++) {
+          const dr = pixFlat[i*3]-centres[j][0], dg = pixFlat[i*3+1]-centres[j][1], db = pixFlat[i*3+2]-centres[j][2];
+          const d = dr*dr + dg*dg + db*db;
+          if (d < bestD) { bestD = d; best = j; }
+        }
+        if (assign[i] !== best) { moved = true; assign[i] = best; }
+      }
+      if (!moved) break;
+      const sums = Array.from({length: k}, () => [0, 0, 0, 0]);
+      for (let i = 0; i < n; i++) {
+        const j = assign[i];
+        sums[j][0] += pixFlat[i*3]; sums[j][1] += pixFlat[i*3+1];
+        sums[j][2] += pixFlat[i*3+2]; sums[j][3]++;
+      }
+      for (let j = 0; j < k; j++)
+        if (sums[j][3] > 0)
+          centres[j] = [sums[j][0]/sums[j][3], sums[j][1]/sums[j][3], sums[j][2]/sums[j][3]];
+    }
+    return centres;
+  }
+
+  // ── Webcam setup ──────────────────────────────────────────────────────────
+
+  async function setup() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    video.srcObject = stream;
+    await new Promise(r => { video.onloadedmetadata = r; });
+    video.play();
+
+    // Lock the canvas display size to the video's native aspect ratio.
+    // CSS max-width/max-height then fits it within the viewport without stretching.
+    canvas.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+
+    resize();
+
+    camTex = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, camTex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+
+    render();
+  }
+
+  // ── Events ────────────────────────────────────────────────────────────────
+
+  window.addEventListener('resize', resize);
+
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      mode = parseInt(btn.dataset.mode);
+      document.querySelectorAll('.mode-btn').forEach(b =>
+        b.classList.toggle('active', b === btn));
+    });
+  });
+
+  document.getElementById('tol-range').addEventListener('input', e => {
+    tolerance = parseFloat(e.target.value);
+    document.getElementById('tol-val').textContent = e.target.value;
+  });
+
+  document.getElementById('eth-range').addEventListener('input', e => {
+    edgeThresh = parseFloat(e.target.value) / 100;
+    document.getElementById('eth-val').textContent = e.target.value;
+  });
+
+  canvas.addEventListener('click', e => {
+    // Read colour from the raw video frame, not the processed canvas,
+    // so the tapped-pixel value is unaffected by whatever effect is active.
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) * (canvas.width  / rect.width);
+    const cy = (e.clientY - rect.top)  * (canvas.height / rect.height);
+
+    const vx = Math.round(cx * video.videoWidth  / canvas.width);
+    const vy = Math.round(cy * video.videoHeight / canvas.height);
+
+    const off = document.createElement('canvas');
+    off.width  = video.videoWidth;
+    off.height = video.videoHeight;
+    off.getContext('2d').drawImage(video, 0, 0);
+    const px = off.getContext('2d').getImageData(vx, vy, 1, 1).data;
+
+    const raw = [px[0] / 255, px[1] / 255, px[2] / 255];
+    targets = [raw, raw]; // both clusters start at tapped pixel; profiling will update
+    document.getElementById('swatch').style.background = `rgb(${px[0]},${px[1]},${px[2]})`;
+    document.getElementById('label').textContent =
+      `rgb(${px[0]}, ${px[1]}, ${px[2]}) · ΔE < ${tolerance}`;
+
+    // Defer spread to next render() frame so it runs after the edge pass,
+    // avoiding any cross-frame texture-unit state issues.
+    spreadPending = true;
+    spreadCx = cx;
+    spreadCy = cy;
+  });
+
+  setup().catch(err => {
+    document.getElementById('label').textContent = `camera error: ${err.message}`;
+    console.error(err);
+  });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+  </script>
+</body>
+</html>
